@@ -1,4 +1,4 @@
-class ApiRespone{
+class ApiResponse{
     constructor(
         data = null,
         message = "Success",
@@ -12,4 +12,4 @@ class ApiRespone{
 
 }
 
-export { ApiRespone };
+export { ApiResponse };
