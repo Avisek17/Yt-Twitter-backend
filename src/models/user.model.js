@@ -1,6 +1,8 @@
 import mongoose , { Schema , model } from 'mongoose' ;
 import bcrypt from 'bcrypt' ;
 import jwt from 'jsonwebtoken' ;
+import dotenv from 'dotenv' ;
+dotenv.config() ;
 
 
 const userSchema = new Schema({
@@ -54,28 +56,26 @@ userSchema.methods.isPassswordCorrect = async function (password){
 }
 
 userSchema.methods.generateAccessToken = function () {
-    jwt.sign(
+    return jwt.sign(
         {
             _id: this._id,
             email: this.email,
             username: this.username,
             fullName: this.fullName,
-        } ,
-        process.env.ACCESS_TOKEN_SECRET ,
+        },
+        process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
-
-    )
+    );
 
 }
 
 userSchema.methods.generateRefreshToken = function () {
-    jwt.sign(
+    return jwt.sign(
         {
             _id: this._id,
         },
-        process.env.REFRESH_TOKEN_SECRET ,
-        { expiresIn : process.env.REFRESH_TOKEN_EXPIRY }
-
-    )
+        process.env.REFRESH_TOKEN_SECRET,
+        { expiresIn: process.env.REFRESH_TOKEN_EXPIRY }
+    );
 }
 export const User = model('User' , userSchema) ;
