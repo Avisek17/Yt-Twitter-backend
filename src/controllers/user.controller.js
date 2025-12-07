@@ -73,7 +73,6 @@ res.status(201).json(
 
 })
 
-
 const loginUser = asyncHandler(async (req, res) => {
     const { username , email , password } = req.body ;
     console.log(username);
@@ -87,6 +86,10 @@ const loginUser = asyncHandler(async (req, res) => {
     })
         if(!user) {
             throw new ApiError("User not found", 404) ;
+        }
+
+        if(!password || password.trim() === "") {
+            throw new ApiError("Password is required", 400);
         }
 
     const isPasswordValid = await user.isPassswordCorrect(password) ;
@@ -110,7 +113,6 @@ const loginUser = asyncHandler(async (req, res) => {
         .json(new ApiResponse({ user: userData, accessToken, refreshToken }, "Login successful", 200));
 });
 
-
 const logoutUser = asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(req.user._id,
         { $set: { refreshToken: undefined } },
@@ -127,4 +129,5 @@ const logoutUser = asyncHandler(async (req, res) => {
         .clearCookie('accessToken', options)
         .json(new ApiResponse(null, "Logout successful", 200));
 });
+
 export { registerUser, loginUser, logoutUser };
